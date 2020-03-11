@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<h4>Kendo UI Grid</h4>
+<br />
+<div id="grid"></div>
+<script>
+ $(document).ready(function() {
+     $("#grid").kendoGrid({
+         dataSource: {
+              type: "aspnetmvc-ajax",
+             transport: {
+
+                                read: "/home/getall",  
+                                update: {
+                                    url: "/home/update",
+                                    dataType: "json"
+                                },
+                                create: {
+                                    url: "/home/add",
+                                    dataType: "json"
+                                },
+                                destroy: {
+                                    url: "/home/delete",
+                                    dataType: "json"
+                 },
+                                parameterMap: function (data, type) {
+                                    if (type == "read") {
+                                        console.log(data, type);
+                    return {
+                        page: data.page,
+                        pageSize: data.pageSize,
+                    }
+                }
+                                }
+                            },
+                            schema: {
+                                model: {
+                                    id: "ProductID",
+                                    fields: {
+                                        ProductID: { type: "number" },
+                                        ProductName: { type: "string" },
+                                        UnitPrice: { type: "number" },
+                                        UnitsInStock: { type: "number" },
+                                        QuantityPerUnit: { type: "number" },
+                                    }
+                                },
+                                data: function (d) { return d.Data; },
+                                total: function (d) { return d.Total; }
+                            },
+                            pageSize: 5,
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        height: 550,
+                        filterable: true,
+                        sortable: true,
+                        pageable: true,
+                        toolbar: ["create"],
+                           editable: "inline",
+                        columns: [
+                            "ProductID",
+                            "ProductName",
+                            "UnitPrice",
+                            "UnitsInStock",
+                            "QuantityPerUnit",
+                             { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" },
+                        ]
+                    });
+                });
+</script>
